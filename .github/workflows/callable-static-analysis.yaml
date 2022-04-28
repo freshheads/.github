@@ -34,6 +34,8 @@ jobs:
                 with:
                     coverage: "none"
                     php-version: "${{ matrix.php-version }}"
+                env:
+                    COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             -   name: "Install SSH key for private libraries"
                 if: "${{ env.ssh-private-key }}"

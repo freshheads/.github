@@ -35,6 +35,8 @@ jobs:
                     coverage: "none"
                     php-version: "${{ matrix.php-version }}"
                     tools: "cs2pr"
+                env:
+                    COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             -   name: "Install SSH key for private libraries"
                 if: "${{ env.ssh-private-key }}"
