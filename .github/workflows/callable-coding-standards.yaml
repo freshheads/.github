@@ -7,16 +7,14 @@ on:
                 required: false
                 type: "string"
         secrets:
-            ssh-private-key:
+            composer-token:
                 required: false
+                description: "Personal access token to authenticate for private repositories"
 
 jobs:
     coding_standards:
         name: "Run checks"
         runs-on: "ubuntu-20.04"
-
-        env:
-            ssh-private-key: ${{ secrets.ssh-private-key }}
 
         strategy:
             matrix:
@@ -36,13 +34,8 @@ jobs:
                     php-version: "${{ matrix.php-version }}"
                     tools: "cs2pr"
                 env:
-                    COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            -   name: "Install SSH key for private libraries"
-                if: "${{ env.ssh-private-key }}"
-                uses: "webfactory/ssh-agent@v0.5.4"
-                with:
-                    ssh-private-key: "${{ secrets.ssh-private-key }}"
+                    # When composer-token is not available, use GITHUB_TOKEN to prevent rate limit errors (https://github.com/actions/runner/issues/409)
+                    COMPOSER_TOKEN: ${{ secrets.composer-token || secrets.GITHUB_TOKEN }}
 
             -   name: "Install Composer dependencies"
                 uses: "ramsey/composer-install@v2"
@@ -50,4 +43,4 @@ jobs:
                     dependency-versions: "${{ matrix.dependency-versions }}"
 
             -   name: "PHP CS Fixer"
-                run: "composer run-script tools:php-cs-fixer-dry-run"
+                run: "make php-cs-fixer-dry-run"
