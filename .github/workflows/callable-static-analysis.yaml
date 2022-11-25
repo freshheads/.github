@@ -33,7 +33,6 @@ jobs:
                     coverage: "none"
                     php-version: "${{ matrix.php-version }}"
                     tools: "symfony-cli"
-                    extensions: "ctype, gd, iconv, intl, mbstring, pdo_sqlite, json"
                 env:
                     # When composer-token is not available, use GITHUB_TOKEN to prevent rate limit errors (https://github.com/actions/runner/issues/409)
                     COMPOSER_TOKEN: ${{ secrets.composer-token || secrets.GITHUB_TOKEN }}
