@@ -6,6 +6,11 @@ on:
                 default: "7.4"
                 required: false
                 type: "string"
+            working-directory:
+                description: 'The directory from which all the commands should be executed'
+                default: "${{ github.workspace }}"
+                required: false
+                type: "string"
         secrets:
             composer-token:
                 required: false
@@ -14,7 +19,7 @@ on:
 jobs:
     static_analysis:
         name: "Run checks"
-        runs-on: "ubuntu-20.04"
+        runs-on: "ubuntu-22.04"
 
         strategy:
             matrix:
@@ -41,6 +46,8 @@ jobs:
                 uses: "ramsey/composer-install@v2"
                 with:
                     dependency-versions: "${{ matrix.dependency-versions }}"
+                    working-directory: "${{ inputs.working-directory }}"
 
             -   name: "PHPStan"
                 run: "make phpstan"
+                working-directory: "${{ inputs.working-directory }}"
